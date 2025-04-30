@@ -1,4 +1,4 @@
-# kickstart.nvim
+# unemployee.nvim
 
 ## Introduction
 
