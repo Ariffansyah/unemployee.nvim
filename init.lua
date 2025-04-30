@@ -276,6 +276,387 @@ require('lazy').setup({
     },
   },
 
+  {
+    'github/copilot.vim',
+    enabled = true,
+  },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim', -- Copilot Chat
+    enabled = false,
+    branch = 'canary',
+    init = function()
+      local copilot = require 'CopilotChat'
+      local keymap = require 'which-key'
+      keymap.add {
+        mode = { 'n', 'v' },
+        { '<leader>cc', '<cmd>CopilotChatToggle <CR>', desc = 'Copilot Chat' },
+      }
+    end,
+    dependencies = {
+      'github/copilot.vim',
+      'nvim-lua/plenary.nvim', -- for curl, log wrapper
+    },
+    build = 'make tiktoken', -- Only on MacOS or Linux
+    opts = {
+      debug = false, -- Enable debugging
+      -- See Configuration section for rest
+    },
+  },
+
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      -- NOTE: Adding custom keymaps for nvim-tree
+      -- See `:help nvim-tree.lua` for more information
+      --
+      -- The following keymaps are used to toggle the tree, find the current file, and refresh the tree.
+      --
+      -- vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle [E]xplorer' })
+      -- WARN: We're moving filesystem manager to neotree for image preview support.
+      -- nvim-tree exist to provide fallback if neotree goes wrong.
+      require('nvim-tree').setup {
+        update_focused_file = {
+          enable = true,
+        },
+        view = {
+          width = 40,
+          side = 'left',
+        },
+        renderer = {
+          highlight_opened_files = 'all',
+
+          root_folder_modifier = ':t',
+          indent_markers = {
+            enable = true,
+          },
+          full_name = true,
+        },
+      }
+    end,
+  },
+
+  {
+    'echasnovski/mini.move',
+    version = false, -- Always install the latest version
+    config = function()
+      require('mini.move').setup {
+        -- Optional configuration
+        mappings = {
+          -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+          left = '<M-h>',
+          right = '<M-l>',
+          down = '<M-j>',
+          up = '<M-k>',
+
+          -- Move current line in Normal mode
+          line_left = '<M-h>',
+          line_right = '<M-l>',
+          line_down = '<M-j>',
+          line_up = '<M-k>',
+        },
+
+        -- Options which control moving behavior
+        options = {
+          -- Automatically reindent selection during linewise vertical move
+          reindent_linewise = true,
+        },
+      }
+    end,
+  },
+
+  -- NOTE: A plugin to display images in Neovim.
+  -- I installed both image_preview.nvim which uses kitty terminal under the hood,
+  -- and image.nvim which uses ImageMagick with magick.nvim bindings.
+  --
+  -- We'll test which one is stable and better for our use case.
+  --
+  -- UPDATE: image.nvim is stable and will be used from now on!
+  -- Feel free to fallback to image_preview.nvim if your platform is incompatible with image.nvim
+  -- {
+  --   'adelarsq/ilazy = true,mage_preview.nvim',
+  --   event = 'VeryLazy',
+  --   config = function()
+  --     require('image_preview').setup()
+  --   end,
+  -- },
+  --
+  -- NOTE: image.nvim is a plugin that allows you to display images in Neovim.
+  -- Visit [This github link](https://github.com/3rd/image.nvim) for basic backend installation.
+  -- ImageMagick is required for this plugin to work.
+  --
+  -- [magick.nvim](https://github.com/kiyoon/magick.nvim) is added as a dependency to reduce the hassle of installing magick Luarock.
+  -- And since MacOS/Arch Linux's default Luarock version is 5.4 and magick doesn't support >5.1, we'll use magick.nvim as a workaround.
+  {
+    '3rd/image.nvim',
+    build = false,
+    event = 'VeryLazy',
+    dependencies = {
+      'kiyoon/magick.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    opts = {
+      backend = 'kitty',
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { 'markdown', 'vimwiki' }, -- markdown extensions (ie. quarto) can go here
+        },
+        neorg = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { 'norg' },
+        },
+      },
+      max_width = nil,
+      max_height = nil,
+      max_width_window_percentage = nil,
+      max_height_window_percentage = 75,
+      tmux_show_only_in_active_window = false,
+      kitty_method = 'normal',
+      hijack_file_patterns = { '*.svg', '*.png', '*.jpg', '*.jpeg', '*.gif', '*.bmp', '*.ico', '*.webp' },
+    },
+  },
+
+  -- NOTE: Neo-Tree is a plugin that allows you to navigate through your project structure.
+  -- It's a great way to quickly jump between files that you're working on.
+  -- We'll be using this from now on instead of Nvim-Tree, because Neo-tree supports buffer source.
+  --
+  -- See `:help neo-tree` for more information
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+      '3rd/image.nvim',
+    },
+    cmd = 'Neotree',
+    keys = {
+      mode = { 'n' },
+      { '<leader>e', '<cmd>Neotree toggle <CR>', desc = 'Open File [E]xplorer' },
+    },
+    init = function()
+      -- If you want icons for diagnostic errors, you'll need to define them somewhere:
+      vim.fn.sign_define('DiagnosticSignError', { text = ' ', texthl = 'DiagnosticSignError' })
+      vim.fn.sign_define('DiagnosticSignWarn', { text = ' ', texthl = 'DiagnosticSignWarn' })
+      vim.fn.sign_define('DiagnosticSignInfo', { text = ' ', texthl = 'DiagnosticSignInfo' })
+      vim.fn.sign_define('DiagnosticSignHint', { text = '󰌵', texthl = 'DiagnosticSignHint' })
+    end,
+    opts = {
+      open_files_do_not_replace_types = { 'terminal', 'Trouble', 'qf', 'edgy' },
+      use_image_preview = true,
+      close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+      enable_git_status = true, -- Enable git status for files
+      sources = { 'filesystem', 'buffers', 'git_status', 'document_symbols' },
+      default_component_configs = {
+        modified = {
+          symbol = '[+]',
+          highlight = 'NeoTreeModified',
+        },
+        name = {
+          trailing_slash = false,
+          use_git_status_colors = true,
+          highlight = 'NeoTreeFileName',
+          format = function(item)
+            return vim.fn.fnamemodify(item.path, ':p') -- Use absolute path
+          end,
+        },
+        git_status = {
+          symbols = {
+            -- Change type
+            added = '', -- or "✚", but this is redundant info if you use git_status_colors on the name
+            modified = '', -- or "", but this is redundant info if you use git_status_colors on the name
+            deleted = '✖', -- this can only be used in the git_status source
+            renamed = '󰁕', -- this can only be used in the git_status source
+            -- Status type
+            untracked = '',
+            ignored = '',
+            unstaged = '󰄱',
+            staged = '',
+            conflict = '',
+          },
+        },
+      },
+      commands = {
+        -- NOTE: Uncomment this if you're using image_preview.nvim for image preview.
+        --
+        -- image_wezterm = function(state)
+        --   local node = state.tree:get_node()
+        --   if node.type == 'file' then
+        --     require('image_preview').PreviewImage(node.path)
+        --   end
+        -- end,
+      },
+      window = {
+        position = 'float',
+        popup = {
+          size = {
+            height = '80%', -- Floating window height (percentage or fixed)
+            width = '25%', -- Floating window width (percentage or fixed)
+          },
+          border = 'rounded', -- Border style for floating window
+          position = {
+            row = 1, -- Align the floating window vertically near the top
+            col = 1000, -- Align it near the left side (close to line numbers)
+          },
+          offset = {
+            row = 0,
+            col = 2, -- Slightly move it away from the very left, next to line numbers
+          },
+        },
+        mappings = {
+          -- NOTE: REFER TO THIS TWO LINES BELOW FOR IMAGE PREVIEW MAPPINGS
+          -- Uncomment one of them to use image preview (or just simply use both, it's up to you)
+          ['P'] = { 'toggle_preview', config = { use_float = true, use_image_nvim = true, use_image_preview = true } },
+          -- ['I'] = 'image_wezterm',
+          --
+          -- These lines below are standard mappings for neo-tree
+          -- Feel free to add more.
+          ['l'] = 'focus_preview',
+          ['S'] = 'open_split',
+          ['s'] = 'open_vsplit',
+        },
+      },
+      filesystem = {
+        filtered_items = {
+          visible = true, -- when true, they will just be displayed differently than normal items
+          hide_dotfiles = true,
+          hide_gitignored = true,
+          hide_hidden = true, -- only works on Windows for hidden files/directories
+          hide_by_name = {
+            --"node_modules"
+          },
+          hide_by_pattern = { -- uses glob style patterns
+            --"*.meta",
+            --"*/src/*/tsconfig.json",
+          },
+          always_show = { -- remains visible even if other settings would normally hide it
+            --".gitignored",
+          },
+          always_show_by_pattern = { -- uses glob style patterns
+            --".env*",
+          },
+          never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
+            --".DS_Store",
+            --"thumbs.db"
+          },
+          never_show_by_pattern = { -- uses glob style patterns
+            --".null-ls_*",
+          },
+        },
+      },
+      buffers = {
+        window = {
+          mappings = {
+            ['<cr>'] = 'open_with_window_picker',
+            ['l'] = 'open_with_window_picker',
+            ['<2-LeftMouse>'] = 'open_with_window_picker',
+          },
+        },
+        components = {
+          {
+            'name',
+            highlight = 'NeoTreeFileName',
+            format = function(item)
+              return vim.fn.fnamemodify(item.path, ':p') -- Use absolute path
+            end,
+          },
+        },
+      },
+    },
+  },
+
+  -- NOTE: Plugin to display Outline of current open buffer.
+  --
+  -- A robust tool second to Neo-tree for code management.
+  {
+    'stevearc/aerial.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    },
+    init = function()
+      require('aerial').setup {
+        layout = {
+          width = 40,
+          default_direction = 'right',
+          placement = 'edge',
+        },
+        -- Options for opening aerial in a floating win
+        float = {
+          -- Controls border appearance. Passed to nvim_open_win
+          border = 'rounded',
+
+          -- Determines location of floating window
+          --   cursor - Opens float on top of the cursor
+          --   editor - Opens float centered in the editor
+          --   win    - Opens float centered in the window
+          relative = 'editor',
+
+          -- These control the height of the floating window.
+          -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+          -- min_height and max_height can be a list of mixed types.
+          -- min_height = {8, 0.1} means "the greater of 8 rows or 10% of total"
+          max_height = 0.9,
+          height = nil,
+          min_height = { 8, 0.1 },
+
+          override = function(conf, source_winid)
+            -- This is the config that will be passed to nvim_open_win.
+            -- Change values here to customize the layout
+            return conf
+          end,
+        },
+        autojump = true,
+        -- Options for the floating nav windows
+        nav = {
+          border = 'rounded',
+          max_height = 0.9,
+          min_height = { 10, 0.1 },
+          max_width = 0.5,
+          min_width = { 0.2, 20 },
+          win_opts = {
+            cursorline = true,
+            winblend = 10,
+          },
+          -- Show a preview of the code in the right column, when there are no child symbols
+          preview = false,
+          -- Keymaps in the nav window
+          keymaps = {
+            ['<CR>'] = 'actions.jump',
+            ['<2-LeftMouse>'] = 'actions.jump',
+            ['<C-v>'] = 'actions.jump_vsplit',
+            ['<C-s>'] = 'actions.jump_split',
+            ['h'] = 'actions.left',
+            ['l'] = 'actions.right',
+            ['<C-c>'] = 'actions.close',
+          },
+        },
+        -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+        on_attach = function(bufnr)
+          -- Jump forwards/backwards with '{' and '}'
+          vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
+          vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
+        end,
+      }
+      -- You probably also want to set a keymap to toggle aerial
+      vim.keymap.set('n', '<leader>E', '<cmd>AerialToggle float<CR>', { desc = 'Toggle Aerial [E]xplorer' })
+    end,
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
