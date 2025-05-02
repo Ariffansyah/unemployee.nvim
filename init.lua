@@ -499,56 +499,31 @@ require('lazy').setup({
   },
 
   {
-    'windwp/nvim-ts-autotag',
-    event = 'BufRead',
-    config = function()
-      require('nvim-ts-autotag').setup {
-        opts = {
-          -- Defaults
-          enable_close = true, -- Auto close tags
-          enable_rename = true, -- Auto rename pairs of tags
-          enable_close_on_slash = false, -- Auto close on trailing </
-        },
-        -- Also override individual filetype configs, these take priority.
-        -- Empty by default, useful if one of the "opts" global settings
-        -- doesn't work well in a specific filetype
-        per_filetype = {
-          ['html'] = {
-            enable_close = true,
-          },
-          ['javascript'] = {
-            enable_close = true,
-          },
-          ['typescript'] = {
-            enable_close = true,
-          },
-          ['jsx'] = {
-            enable_close = true,
-          },
-          ['tsx'] = {
-            enable_close = true,
-          },
-          ['svelte'] = {
-            enable_close = true,
-          },
-          ['vue'] = {
-            enable_close = true,
-          },
-        },
-      }
-
-      -- Handling LSP errors only when using `Insert` mode.
-      vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = true,
-        virtual_text = {
-          spacing = 5,
-          min = {
-            severity = 'warnings',
-          },
-        },
-        update_in_insert = true,
-      })
+    'Dan7h3x/signup.nvim',
+    branch = 'main',
+    opts = {
+      -- Your configuration options here
+    },
+    config = function(_, opts)
+      require('signup').setup(opts)
     end,
+  },
+
+  { 'nvim-java/nvim-java' },
+
+  {
+    'ray-x/go.nvim',
+    dependencies = { -- optional packages
+      'ray-x/guihua.lua',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('go').setup()
+    end,
+    event = { 'CmdlineEnter' },
+    ft = { 'go', 'gomod' },
+    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
   {
@@ -794,7 +769,7 @@ require('lazy').setup({
 
   {
     'CopilotC-Nvim/CopilotChat.nvim', -- Copilot Chat
-    enabled = false,
+    enabled = true,
     branch = 'canary',
     init = function()
       local copilot = require 'CopilotChat'
