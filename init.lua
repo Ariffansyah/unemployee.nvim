@@ -356,6 +356,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'glebzlat/arduino-nvim',
+    config = {
+      function()
+        require('arduino-nvim').setup()
+      end,
+      filetype = 'arduino',
+    },
+  },
+
   { 'echasnovski/mini.bufremove', lazy = true },
 
   {
@@ -770,7 +780,7 @@ require('lazy').setup({
   {
     'CopilotC-Nvim/CopilotChat.nvim', -- Copilot Chat
     enabled = true,
-    branch = 'canary',
+    branch = 'main',
     init = function()
       local copilot = require 'CopilotChat'
       local keymap = require 'which-key'
