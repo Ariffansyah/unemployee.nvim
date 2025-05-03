@@ -356,16 +356,6 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'glebzlat/arduino-nvim',
-    config = {
-      function()
-        require('arduino-nvim').setup()
-      end,
-      filetype = 'arduino',
-    },
-  },
-
   { 'echasnovski/mini.bufremove', lazy = true },
 
   {
