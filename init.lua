@@ -1465,7 +1465,7 @@ require('lazy').setup({
           },
         },
 
-        kotlin_languange_server = {},
+        ktlint = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -1480,7 +1480,13 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
+        'clangd',
+        'clang-format',
+        'gopls',
+        'ktlint',
+        'jdtls',
+        'pyright',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1498,9 +1504,6 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
-      }
-      require('mason-tool-installer').setup {
-        ensure_installed = { 'ktlin' }, -- Ensure stylua is installed for formatting Lua code
       }
     end,
   },
@@ -2152,6 +2155,12 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'clangd', -- C/C++ Language Server
+        'clang-format', -- C/C++ Formatter
+        'gopls', -- Go Language Server
+        'pyright', -- Python Language Server
+        'jdtls', -- Java Language Server
+        'ktlint', -- Kotlin Language Server
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
