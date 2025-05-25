@@ -1464,6 +1464,8 @@ require('lazy').setup({
             },
           },
         },
+
+        kotlin_languange_server = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -1496,6 +1498,9 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+      require('mason-tool-installer').setup {
+        ensure_installed = { 'ktlin' }, -- Ensure stylua is installed for formatting Lua code
       }
     end,
   },
@@ -2407,6 +2412,7 @@ require('lazy').setup({
         'regex',
         'norg',
         'java',
+        'kotlin',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
