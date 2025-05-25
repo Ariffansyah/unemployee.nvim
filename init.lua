@@ -1483,10 +1483,13 @@ require('lazy').setup({
         'stylua',
         'clangd',
         'clang-format',
+        'prettierd',
         'gopls',
         'ktlint',
         'jdtls',
         'pyright',
+        'isort',
+        'black',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1711,7 +1714,18 @@ require('lazy').setup({
       },
       formatters_by_ft = {
         lua = { 'stylua' },
-        go = { 'gofumpt', 'goimports', 'gofmt' },
+        go = { 'gofumpt', 'gofmt' },
+        cpp = { 'clang-format' },
+        c = { 'clang-format' },
+        javascript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        html = { 'prettierd' },
+        css = { 'prettierd' },
+        json = { 'prettierd' },
+        jsonc = { 'prettierd' },
+        python = { 'isort', 'black' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -2161,6 +2175,15 @@ require('lazy').setup({
         'pyright', -- Python Language Server
         'jdtls', -- Java Language Server
         'ktlint', -- Kotlin Language Server
+        'prettierd', -- JavaScript/TypeScript Formatter
+        'isort', -- Python Formatter
+        'black', -- Python Formatter
+        'tailwindcss-language-server', -- Tailwind CSS Language Server
+        'typescript-language-server', -- TypeScript Language Server
+        'css-lsp', -- CSS Language Server
+        'svelte-language-server', -- Svelte Language Server
+        'html-lsp', -- HTML Language Server
+        'json-lsp', -- JSON Language Server
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -2423,16 +2446,15 @@ require('lazy').setup({
         'java',
         'kotlin',
       },
-      -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
         enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      autotag = {
+        enable = true,
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -2440,6 +2462,13 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+
+  {
+    'windwp/nvim-ts-autotag',
+    opts = {},
+    event = 'InsertEnter',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
