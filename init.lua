@@ -241,6 +241,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'mfussenegger/nvim-jdtls' },
+  { 'nvim-java/nvim-java' },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -1480,6 +1481,9 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      require('java').setup()
+      require('lspconfig').jdtls.setup {}
 
       require('mason-lspconfig').setup {
         handlers = {
