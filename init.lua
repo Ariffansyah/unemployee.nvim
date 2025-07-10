@@ -285,33 +285,29 @@ require('lazy').setup({
         renderer = 'treesitter',
       },
       lsp = {
-        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+        signature = {
+          enabled = false,
+        },
         override = {
           ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
           ['vim.lsp.util.stylize_markdown'] = true,
           ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
         },
       },
-      -- you can enable a preset for easier configuration
       presets = {
-        bottom_search = false, -- use a classic bottom cmdline for search
-        command_palette = false, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = false, -- add a border to hover docs and signature help
+        bottom_search = false,
+        command_palette = false,
+        long_message_to_split = true,
+        inc_rename = false,
+        lsp_doc_border = false,
       },
     },
     dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
       'MunifTanjim/nui.nvim',
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
       'rcarriga/nvim-notify',
       'nvim-treesitter/nvim-treesitter',
     },
   },
-
   { -- Statusline bottom-side
     -- NOTE: Will use heirline.nvim someday, for now I'll stick with lualine.
     -- Go check htps://github.com/rebelot/heirline.nvim if you wanna hop in first.
@@ -2249,6 +2245,16 @@ require('lazy').setup({
     'saghen/blink.cmp',
     event = 'VimEnter',
     version = '1.*',
+    signature = {
+      enabled = true, -- Enable signature help
+      window = {
+        -- You can customize the appearance of the signature help window
+        border = 'rounded', -- Use a rounded border for the signature help window
+        max_width = 80, -- Set a maximum width for the signature help window
+        max_height = 20, -- Set a maximum height for the signature help window
+        focusable = false, -- Make the signature help window focusable
+      },
+    },
     dependencies = {
       -- Snippet Engine
       {
