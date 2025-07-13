@@ -1478,6 +1478,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua',
         'clangd',
+        'csharp-language-server',
         'clang-format',
         'prettierd',
         'gopls',
@@ -2178,6 +2179,7 @@ require('lazy').setup({
         'typescript-language-server', -- TypeScript Language Server
         'css-lsp', -- CSS Language Server
         'svelte-language-server', -- Svelte Language Server
+        'csharp-language-server', -- C# Language Server
         'html-lsp', -- HTML Language Server
         'json-lsp', -- JSON Language Server
       })
