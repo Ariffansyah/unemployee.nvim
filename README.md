@@ -24,15 +24,15 @@ A Neovim configuration for developers, designed to enhance productivity with a f
 
 ## Installation
 
-    Linux and macOS:
-    ```bash
-    git clone https://github.com/Ariffansyah/unemployee.nvim.git ~/.config/nvim
-    ```
+Linux and macOS:
+```bash
+git clone https://github.com/Ariffansyah/unemployee.nvim.git ~/.config/nvim
+```
 
-    Windows:
-    ```bash
-    git clone https://github.com/Ariffansyah/unemployee.nvim.git $HOME/AppData/Local/nvim
-    ```
+Windows:
+```bash
+git clone https://github.com/Ariffansyah/unemployee.nvim.git $HOME/AppData/Local/nvim
+```
 
 ![image](./Screenshots/Neovim.png)
 
