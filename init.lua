@@ -966,7 +966,6 @@ require('lazy').setup({
   -- And since MacOS/Arch Linux's default Luarock version is 5.4 and magick doesn't support >5.1, we'll use magick.nvim as a workaround.
   {
     '3rd/image.nvim',
-    build = false,
     event = 'VeryLazy',
     dependencies = {
       'kiyoon/magick.nvim',
@@ -977,7 +976,7 @@ require('lazy').setup({
       integrations = {
         markdown = {
           enabled = true,
-          clear_in_insert_mode = false,
+          clear_in_insert_mode = true,
           download_remote_images = true,
           only_render_image_at_cursor = false,
           filetypes = { 'markdown', 'vimwiki' }, -- markdown extensions (ie. quarto) can go here
@@ -1480,6 +1479,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua',
         'clangd',
+        'intelephense',
         'csharp-language-server',
         'clang-format',
         'prettierd',
@@ -1725,6 +1725,10 @@ require('lazy').setup({
         json = { 'prettierd' },
         jsonc = { 'prettierd' },
         python = { 'isort', 'black' },
+        php = { 'intelephense' },
+        laravel = { 'intelephense' },
+        kotlin = { 'ktlint' },
+        csharp = { 'csharp-language-server' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -2170,6 +2174,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'clangd', -- C/C++ Language Server
         'clang-format', -- C/C++ Formatter
+        'intelephense', -- PHP Language Server
         'gopls', -- Go Language Server
         'pyright', -- Python Language Server
         'jdtls', -- Java Language Server
