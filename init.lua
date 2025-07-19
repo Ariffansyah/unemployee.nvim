@@ -1412,6 +1412,7 @@ require('lazy').setup({
         },
         -- NOTE: Rust LSP
         rust_analyzer = {},
+        omnisharp = {},
 
         -- NOTE: Python LSP
         pyright = {},
@@ -1480,8 +1481,8 @@ require('lazy').setup({
         'stylua',
         'clangd',
         'intelephense',
-        'csharp-language-server',
         'clang-format',
+        'omnisharp',
         'prettierd',
         'gopls',
         'ktlint',
@@ -1728,7 +1729,8 @@ require('lazy').setup({
         php = { 'intelephense' },
         laravel = { 'intelephense' },
         kotlin = { 'ktlint' },
-        csharp = { 'csharp-language-server' },
+        csharp = { 'csharpier' },
+
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -2186,7 +2188,8 @@ require('lazy').setup({
         'typescript-language-server', -- TypeScript Language Server
         'css-lsp', -- CSS Language Server
         'svelte-language-server', -- Svelte Language Server
-        'csharp-language-server', -- C# Language Server
+        'omnisharp', -- C# Language Server
+        'csharpier', -- C# Formatter
         'html-lsp', -- HTML Language Server
         'json-lsp', -- JSON Language Server
       })
